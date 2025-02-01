@@ -1,0 +1,449 @@
+---
+author: Jayden Cruz & Christopher Garcia
+title: "FinalProject"
+format: html
+editor: visual
+---
+
+# Bayesian Statistics Final Project
+
+In this project, we will explore the Fish Market Data set, which provides detailed information about different fish species and their physical characteristics. The data set include the following variables:
+
+-   **Species**: The species of the fish (categorical).
+
+-   **Weight**: The weight of the fish in grams (continuous).
+
+-   **Length1(Vertical), Length2(Diagonal), Length3(Cross-Length)**: Various measurements of length in centimeters (continuous).
+
+-   **Height**: The height of the fish as a percentage of its cross-sectional length (continuous).
+
+-   **Width**: The width of the fish as a percentage of its cross-sectional length (continuous).
+
+This data set was collected form Kaggle.com (<https://www.kaggle.com/datasets/vipullrathod/fish-market/data>)
+
+Our goal is to model and analyze the relationships between these variables to predict the **Weight** of the fish, a continuous outcome. This will involve the following steps:
+
+1.  Developing **three Directed Acyclic Graph (DAG) models**, where we explore one predictor at a time and a combined predictor approach:
+
+    -   A model for Weight with one continuous variable Length 2.
+
+    -   A model for Weight with one another continuous variable Heigth.
+
+    -   A model for Weight with both continuous and categorical predictors.
+
+2.  Using **quadratic approximation (quap)** to create and analyze three quadratic models, informed by priors with scientific or logical backing.
+
+3.  Re-analyzing the models with **Markov Chain Monte Carlo (MCMC)** techniques to ensure robustness.
+
+4.  Comparing the models through metrics like WAIC (Widely Applicable Information Criterion) and visualizations to identify the best-fitting model.
+
+Through this analysis, we aim to understand the predictive power of different fish characteristics and to evaluate the differences between approximation and MCMC-based modeling.
+
+### Load in Fish Market Data
+
+```{r}
+library(rethinking)
+data <- read.csv("Fish.csv")
+d <- data
+d <- na.omit(d) 
+
+#head(d)
+#tail(d)
+```
+
+The dataset has been loaded in, can see the head and the tail of the data.
+
+### Standardize the Variables
+
+```{r}
+d$W <- standardize(d$Weight)
+d$L <- standardize(d$Length2)
+d$H <- standardize(d$Height)
+
+dcc <- d[ complete.cases(d$W,d$L,d$H) , ]
+
+head(dcc)
+```
+
+Weight is our Y variable.
+
+Length2 is our X1 variable and Height is our X2 variable. We standardize our variables to ensure all variables are on a equal scale as height is in centimeter and weight is in grams.
+
+## Quadratic Approximation
+
+### DAG Models
+
+0.  Importing required libraries
+
+```{r}
+library(ggdag)
+library(ggplot2)
+theme_set(theme_dag())
+```
+
+1\. A model for Y(Weight) with X1(Length 2).
+
+```{r}
+dagify(Weight ~ Length2) %>%
+  ggdag()
+```
+
+Arrow from length 2 to weight, showing that length 2 can influence the weight of a fish
+
+2\. A model for Y(Weight) with X2(Species).
+
+```{r}
+dagify(Weight ~ Height) %>%
+  ggdag()
+```
+
+Arrow from species to weight, showing that species can influence the weight of a fish
+
+3\. A model for Y with X1 and X2.
+
+```{r}
+dagify(
+  Weight ~ Height,
+  Weight ~ Length2,
+  Length2 ~ Height,
+  Height ~ Length2
+) %>%
+  ggdag()
+```
+
+Arrow from species to weight and length 2 to weight, showing that species and length can influence the weight of a fish
+
+## Quadratic Models
+
+Selecting Priors for Weight
+
+```{r}
+average_weight <- mean(dcc$W, na.rm = TRUE)
+
+print(paste("The average weight of the fish is:", average_weight, "grams"))
+
+
+weight_sd <- sd(dcc$W, na.rm = TRUE)
+print(paste("STD:", weight_sd))
+
+```
+
+The average for the Weight column after being standardized is -1.675e-16 which is extremely close to 0 so for our prior for weight we will choose 0 with a standard deviation of 1.
+
+Model 1: Length 2 -\> Weight
+
+```{r}
+ m1 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),        
+    mu <- a + bL * L,             
+    a ~ dnorm(0, 1),
+    bL ~ dnorm(0.5, 2),
+    sigma ~ dexp(1)              
+  ), data = d                     
+)
+precis(m1)
+```
+
+Here’s a description of **Model 1** based on the new priors:
+
+------------------------------------------------------------------------
+
+**Model 1** predicts Weight (W) using Length (L). Weight is modeled with a normal distribution, where the mean is a linear function of Length, with an intercept (a) and slope (bL). The prior for the intercept (a) is centered around 0, with a standard deviation of 10. This indicates a belief that the baseline weight is approximately 0, with a fairly wide range of uncertainty. The prior for the slope (bL) is centered at 0.5, with a standard deviation of 2, suggesting that for each 1-unit increase in length, the fish's weight is expected to increase by about 0.5 grams, with some uncertainty regarding the exact effect. The prior for sigma (the weight variability) follows an exponential distribution with a rate of 1, reflecting the natural variability in fish weight. This model captures the relationship between length and weight, accounting for both the expected effect of length and the natural variation in weight.
+
+Model 1: Simulate the priors
+
+```{r}
+prior <- extract.prior(m1)
+
+xseq <- seq(min(dcc$L), max(dcc$L), length.out = 100)  
+
+mu <- link(m1, post = prior, data = list(L = xseq))
+
+plot(NULL, xlim = range(xseq), ylim = range(mu), 
+     xlab = "Length", ylab = "Predicted Weight", main = "Simulated Priors for Model 1")
+
+for ( i in 1:50 ) lines( xseq , mu[i,] , col=col.alpha("black",0.3) )
+```
+
+Model 2: Height -\> Weight
+
+```{r}
+m2 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),       
+    mu <- a + bH * H,            
+    a ~ dnorm(0, 1),            
+    bH ~ dnorm(0.5, 2),
+    sigma ~ dexp(1)                
+  ), data = d                     
+)
+precis(m2)  
+```
+
+**Model 2** predicts Weight (W) using Height (H). Weight is modeled with a normal distribution, where the mean is a linear function of Height, with an intercept (a) and slope (bH). The prior for the intercept (a) is centered around 0, with a standard deviation of 10, suggesting that the baseline weight is approximately 0, with a relatively wide range of uncertainty. The prior for the slope (bH) is centered around 0.5, with a standard deviation of 2, implying that for each 1-unit increase in height, the fish's weights is expected to increase by about 0.5 grams, with some uncertainty. The prior for sigma (the weight variability) follows an exponential distribution with a rate of 1, reflecting the natural variability in fish weight. This model captures the relationship between height and weight, accounting for both the expected effect of length and the natural variation in weight.
+
+Model 2: Simulate the priors
+
+```{r}
+prior <- extract.prior(m2)
+
+xseq <- seq(min(dcc$H), max(dcc$H), length.out = 100)  
+
+mu <- link(m2, post = prior, data = list(H = xseq))  
+
+plot(NULL, xlim = range(xseq), ylim = range(mu), 
+     xlab = "Height", ylab = "Predicted Weight", main = "Simulated Priors for Model 2")
+
+for (i in 1:50) {
+  lines(xseq, mu[i,], col = col.alpha("black", 0.3))  
+}
+
+```
+
+Model 2: Counterfactual Plot
+
+```{r}
+xseq <- seq(from = min(dcc$H) - 2, to = max(dcc$H) + 2, length.out = 30)
+
+mu <- link(m2, data = data.frame(H = xseq))
+
+mu_mean <- apply(mu, 2, mean)
+mu_PI <- apply(mu, 2, PI)
+
+plot(NULL, xlim = range(dcc$H), ylim = range(dcc$W), 
+     xlab = "Height (H)", ylab = "Weight (W)", main = "Height to Predict Weight")
+
+lines(xseq, mu_mean, lwd = 2)
+
+shade(mu_PI, xseq)
+
+text(x = mean(range(dcc$H)), y = max(dcc$W), 
+     labels = "Model: Height -> Weight", pos = 3, cex = 1.2)
+
+```
+
+Model 3: Length 2 + Height -\> Weight
+
+```{r}
+m3 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a + bL * L + bH * H,
+    a ~ dnorm(0, 1),            
+    bL ~ dnorm(0.5, 2),
+    bH ~ dnorm(0.5, 2),
+    sigma ~ dexp(1)
+  ), data = dcc
+)
+precis(m3)
+plot( coeftab( m1 , m2 , m3 ) , pars=c("bL","bH") )
+```
+
+Model 3 predicts **Weight (W)** using both **Length 2 (L)** and **Height (H)**. The prior for the intercept (**a**) is centered around 20 grams with a standard deviation of 5 grams, reflecting the baseline weight. The slope for **Length 2 (bL)** has a prior centered at 0 with a standard deviation of 1, and the slope for **Height (bH)** has a prior centered at 0.3 with a standard deviation of 0.2, suggesting a positive effect of height on weight.
+
+M3: We see that 0.77 for the Length is still high but it decreased. The mean for Height also decreased significantly. going from 0.72 to 0.23. So when both x variables are used together their significance decreases.
+
+#### Comparison Plot
+
+The circle means the average the lines how wide is the variability.
+
+The plot shows that height (H) alone in M2 has high variability but a positive relationship with weight, indicating uncertainty in its predictive power. When combined with length (L) in M3, the variability decreases, but height's ability to predict weight is reduced. Length alone in M1 has low variability, showing it is a strong predictor of weight. However, combining length and height in M3 also reduces length's predictive strength. Both variables predict weight better individually than together.
+
+-   **Length (L)**:
+
+    -   Alone, it shows a **strong and consistent relationship** with weight, indicated by low variability in its estimate.
+
+    -   When combined with height, its predictive ability is slightly diminished, suggesting that height and length may overlap in the variance they explain for weight.
+
+-   **Height (H)**:
+
+    -   Alone, it has a **positive but more variable relationship** with weight, indicating greater uncertainty.
+
+    -   Combining it with length reduces its predictive power, likely due to overlap with length in explaining weight.
+
+-   **Joint Prediction**:
+
+    -   Both variables together do not predict weight as effectively as each variable individually. This suggests some redundancy, where both variables might explain similar aspects of weight variation.
+
+Model 3: Simulate the priors
+
+```{r}
+prior <- extract.prior(m3)
+
+xseq_L <- seq(min(dcc$L), max(dcc$L), length.out = 100)
+
+xseq_H <- seq(min(dcc$H), max(dcc$H), length.out = 100)
+
+mu <- link(m3, post = prior, data = list(L = xseq_L, H = xseq_H))
+
+plot(NULL, xlim = range(xseq_L), ylim = range(mu), 
+     xlab = "Length", ylab = "Predicted Weight", main = "Simulated Priors for Model 3: Length + Height")
+
+for (i in 1:50) {
+  lines(xseq_L, mu[i,], col = col.alpha("black", 0.3))
+}
+
+
+
+```
+
+### Counterfactual Plots for all Models
+
+```{r}
+#counterfactual plots
+m3.a <- quap(
+  alist(
+    ## L -> W <- H
+    W ~ dnorm( mu , sigma ) ,
+    mu <- a + bH*H + bL*L ,
+    a ~ dnorm( 0 , 1 ) ,
+    bH ~ dnorm( 0.5 , 2 ) ,
+    bL ~ dnorm( 0.5 , 2 ) ,
+    sigma ~ dexp( 1 ),
+    ## L -> H
+    H ~ dnorm( mu_H , sigma_H ),
+    mu_H <- aH + bLH*L,
+    aH ~ dnorm( 0 , 0.2 ),
+    bLH ~ dnorm( 0 , 0.5 ),
+    sigma_H ~ dexp( 1 )
+    ) , data = dcc )
+
+L_seq <- seq( from=-2 , to=2 , length.out=30 )
+
+#L ON W
+sim_dat <- data.frame( L=L_seq )
+
+s <- sim( m3.a , data=sim_dat , vars=c("H","W") )
+
+
+plot(sim_dat$L, colMeans(s$W), ylim = c(-2, 2), type = "l",
+  main = "Total counterfactual effect of L on W",
+  xlab = "manipulated L",
+  ylab = "counterfactual W"
+)
+
+shade( apply(s$W,2,PI) , sim_dat$L )
+
+#H ON W
+
+sim_dat <- data.frame( H=seq(from=-2,to=2,length.out=30) , L=0 )
+
+s <- sim( m3.a , data=sim_dat , vars=c("W") )
+
+plot( sim_dat$H , colMeans(s) , ylim=c(-2,2) , type = "l", main = "Total Counterfactual Effect of H on W", xlab ="manipulated H" , ylab ="counterfactual W" )
+
+shade( apply(s,2,PI) , sim_dat$H )
+
+#H ON L
+sim_dat <- data.frame(H = seq(from = -2, to = 2, length.out = 30))
+s <- sim(m3.a, data = sim_dat, vars = "L")  # Simulate L based on H
+
+par(mar = c(5.1, 4.1, 4.1, 2.1))
+plot(sim_dat$H, colMeans(s), ylim = c(-2, 2), type = "l",
+     main = "Counterfactual Effect of L on H",
+     xlab = "Manipulated H",
+     ylab = "Counterfactual L")
+
+shade(apply(s, 2, PI), sim_dat$H)
+```
+
+1.  Length does good job at explaining weight -2 to 2
+2.  Height is OK/decent -1 to 0 has a decent relation ship
+3.  Not a really significant relation, because its at 1 the relationship exist but it doesnt mean anythign
+
+## Markov Chain Monte Carlo
+
+MCMC - Model 1: Length2 -\> Weight
+
+```{r}
+# MCMC - Model 1: Length2 -> Weight
+m1_mcmc <- ulam(
+  alist(
+    W ~ dnorm(mu, sigma),        
+    mu <- a + bL * L,             
+    a ~ dnorm(0, 1),              
+    bL ~ dnorm(0.5, 2),           
+    sigma ~ dexp(1)               
+  ), data = dcc,              
+  chains = 4,                    
+  cores = 4,                     
+  log_lik = TRUE                 
+)
+
+precis(m1_mcmc)
+traceplot(m1_mcmc)
+WAIC(m1_mcmc)
+
+```
+
+MCMC - Model 2: Height -\> Weight
+
+```{r}
+# MCMC - Model 2: Height -> Weight
+m2_mcmc <- ulam(
+  alist(
+    W ~ dnorm(mu, sigma),        
+    mu <- a + bH * H,             
+    a ~ dnorm(0, 1),              
+    bH ~ dnorm(0.5, 2),           
+    sigma ~ dexp(1)               
+  ), data = dcc,              
+  chains = 4,                    
+  cores = 4,                     
+  log_lik = TRUE                 
+)
+
+precis(m2_mcmc)
+traceplot(m2_mcmc)
+WAIC(m2_mcmc)
+```
+
+MCMC - Model 3: Length2 + Height -\> Weight
+
+```{r}
+# MCMC - Model 3: Length 2 + Height -> Weight
+m3_mcmc <- ulam(
+  alist(
+    W~ dnorm( mu, sigma),
+    mu <- a + bL * L + bH * H,
+      a ~ dnorm(0, 1),              
+      bL ~ dnorm(0.5, 2),   
+      bH ~ dnorm(0.5, 2),
+    sigma ~ dexp( 1)
+), data = dcc,
+   chains=4,
+   cores=4,
+   log_lik = TRUE
+)
+
+precis(m3_mcmc)
+traceplot(m3_mcmc)
+WAIC(m3_mcmc)
+```
+
+### Comparing the Models using WAIC
+
+```{r}
+compare( m1_mcmc , m2_mcmc , m3_mcmc )
+```
+
+The **WAIC (Widely Applicable Information Criterion)** values indicate the relative performance of the three models, with lower values representing better predictive accuracy and model fit.
+
+### Explanation:
+
+-   **M1 (WAIC = 162.0)**:\
+    Using length alone provides a relatively good fit, with a lower WAIC than M2. Length is a strong predictor of weight.
+
+-   **M2 (WAIC = 341.3)**:\
+    Using height alone results in the worst fit. The high WAIC indicates that height is less effective at predicting weight compared to length or the combined model.
+
+-   **M3 (WAIC = 130.4)**:\
+    Combining length and height provides the best fit. The lowest WAIC suggests that including both predictors captures more variability in weight and improves predictive performance compared to using either variable alone.
+
+Length is a stronger individual predictor of weight than height (as seen in M1 vs. M2), but combining both predictors in M3 gives the best overall model fit.
+
+## Resources Used/ Works Cited
+
+1.  Fish Market Data (<https://www.kaggle.com/datasets/vipullrathod/fish-market/data>)
+2.  DAG Models (<https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-dags.html>)

@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jayden Cruz &amp; Christopher Garcia">
+
+<title>FinalProject</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="FinalProject_files/libs/clipboard/clipboard.min.js"></script>
+<script src="FinalProject_files/libs/quarto-html/quarto.js"></script>
+<script src="FinalProject_files/libs/quarto-html/popper.min.js"></script>
+<script src="FinalProject_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="FinalProject_files/libs/quarto-html/anchor.min.js"></script>
+<link href="FinalProject_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="FinalProject_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="FinalProject_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="FinalProject_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="FinalProject_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">FinalProject</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jayden Cruz &amp; Christopher Garcia </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="bayesian-statistics-final-project" class="level1">
+<h1>Bayesian Statistics Final Project</h1>
+<p>In this project, we will explore the Fish Market Data set, which provides detailed information about different fish species and their physical characteristics. The data set include the following variables:</p>
+<ul>
+<li><p><strong>Species</strong>: The species of the fish (categorical).</p></li>
+<li><p><strong>Weight</strong>: The weight of the fish in grams (continuous).</p></li>
+<li><p><strong>Length1(Vertical), Length2(Diagonal), Length3(Cross-Length)</strong>: Various measurements of length in centimeters (continuous).</p></li>
+<li><p><strong>Height</strong>: The height of the fish as a percentage of its cross-sectional length (continuous).</p></li>
+<li><p><strong>Width</strong>: The width of the fish as a percentage of its cross-sectional length (continuous).</p></li>
+</ul>
+<p>This data set was collected form Kaggle.com (<a href="https://www.kaggle.com/datasets/vipullrathod/fish-market/data" class="uri">https://www.kaggle.com/datasets/vipullrathod/fish-market/data</a>)</p>
+<p>Our goal is to model and analyze the relationships between these variables to predict the <strong>Weight</strong> of the fish, a continuous outcome. This will involve the following steps:</p>
+<ol type="1">
+<li><p>Developing <strong>three Directed Acyclic Graph (DAG) models</strong>, where we explore one predictor at a time and a combined predictor approach:</p>
+<ul>
+<li><p>A model for Weight with one continuous variable Length 2.</p></li>
+<li><p>A model for Weight with one another continuous variable Heigth.</p></li>
+<li><p>A model for Weight with both continuous and categorical predictors.</p></li>
+</ul></li>
+<li><p>Using <strong>quadratic approximation (quap)</strong> to create and analyze three quadratic models, informed by priors with scientific or logical backing.</p></li>
+<li><p>Re-analyzing the models with <strong>Markov Chain Monte Carlo (MCMC)</strong> techniques to ensure robustness.</p></li>
+<li><p>Comparing the models through metrics like WAIC (Widely Applicable Information Criterion) and visualizations to identify the best-fitting model.</p></li>
+</ol>
+<p>Through this analysis, we aim to understand the predictive power of different fish characteristics and to evaluate the differences between approximation and MCMC-based modeling.</p>
+<section id="load-in-fish-market-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-in-fish-market-data">Load in Fish Market Data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: cmdstanr</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'cmdstanr' was built under R version 4.4.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>This is cmdstanr version 0.8.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>- CmdStan path: /Users/jaydencruz/.cmdstan/cmdstan-2.35.0</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>- CmdStan version: 2.35.0</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: posterior</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>This is posterior version 1.6.0</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'posterior'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    mad, sd, var</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    %in%, match</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: parallel</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>rethinking (Version 2.42)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'rethinking'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    rstudent</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Fish.csv"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> data</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(d) </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#head(d)</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#tail(d)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The dataset has been loaded in, can see the head and the tail of the data.</p>
+</section>
+<section id="standardize-the-variables" class="level3">
+<h3 class="anchored" data-anchor-id="standardize-the-variables">Standardize the Variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>W <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Weight)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>L <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Length2)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>H <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Height)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>dcc <span class="ot">&lt;-</span> d[ <span class="fu">complete.cases</span>(d<span class="sc">$</span>W,d<span class="sc">$</span>L,d<span class="sc">$</span>H) , ]</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dcc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Species Weight Length1 Length2 Length3  Height  Width           W          L
+1   Bream    242    23.2    25.4    30.0 11.5200 4.0200 -0.43669241 -0.2814139
+2   Bream    290    24.0    26.3    31.2 12.4800 4.3056 -0.30260608 -0.1974299
+3   Bream    340    23.9    26.5    31.1 12.3778 4.6961 -0.16293282 -0.1787668
+4   Bream    363    26.3    29.0    33.5 12.7300 4.4555 -0.09868311  0.0545221
+5   Bream    430    26.5    29.0    34.0 12.4440 5.1340  0.08847906  0.0545221
+6   Bream    450    26.8    29.7    34.7 13.6024 4.9274  0.14434837  0.1198430
+          H
+1 0.5946997
+2 0.8186739
+3 0.7948300
+4 0.8770005
+5 0.8102749
+6 1.0805371</code></pre>
+</div>
+</div>
+<p>Weight is our Y variable.</p>
+<p>Length2 is our X1 variable and Height is our X2 variable. We standardize our variables to ensure all variables are on a equal scale as height is in centimeter and weight is in grams.</p>
+</section>
+<section id="quadratic-approximation" class="level2">
+<h2 class="anchored" data-anchor-id="quadratic-approximation">Quadratic Approximation</h2>
+<section id="dag-models" class="level3">
+<h3 class="anchored" data-anchor-id="dag-models">DAG Models</h3>
+<ol start="0" type="1">
+<li>Importing required libraries</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggdag'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_dag</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>1. A model for Y(Weight) with X1(Length 2).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dagify</span>(Weight <span class="sc">~</span> Length2) <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdag</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Arrow from length 2 to weight, showing that length 2 can influence the weight of a fish</p>
+<p>2. A model for Y(Weight) with X2(Species).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dagify</span>(Weight <span class="sc">~</span> Height) <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdag</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Arrow from species to weight, showing that species can influence the weight of a fish</p>
+<p>3. A model for Y with X1 and X2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dagify</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  Weight <span class="sc">~</span> Height,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  Weight <span class="sc">~</span> Length2,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  Length2 <span class="sc">~</span> Height,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  Height <span class="sc">~</span> Length2</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggdag</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Arrow from species to weight and length 2 to weight, showing that species and length can influence the weight of a fish</p>
+</section>
+</section>
+<section id="quadratic-models" class="level2">
+<h2 class="anchored" data-anchor-id="quadratic-models">Quadratic Models</h2>
+<p>Selecting Priors for Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>average_weight <span class="ot">&lt;-</span> <span class="fu">mean</span>(dcc<span class="sc">$</span>W, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"The average weight of the fish is:"</span>, average_weight, <span class="st">"grams"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "The average weight of the fish is: -1.67580833905684e-16 grams"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>weight_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(dcc<span class="sc">$</span>W, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"STD:"</span>, weight_sd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "STD: 1"</code></pre>
+</div>
+</div>
+<p>The average for the Weight column after being standardized is -1.675e-16 which is extremely close to 0 so for our prior for weight we will choose 0 with a standard deviation of 1.</p>
+<p>Model 1: Length 2 -&gt; Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a> m1 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),        </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bL <span class="sc">*</span> L,             </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)              </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d                     </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd        5.5%      94.5%
+a     -9.353273e-08 0.03118487 -0.04983954 0.04983936
+bL     9.185158e-01 0.03129480  0.86850063 0.96853089
+sigma  3.934176e-01 0.02202040  0.35822479 0.42861048</code></pre>
+</div>
+</div>
+<p>Here’s a description of <strong>Model 1</strong> based on the new priors:</p>
+<hr>
+<p><strong>Model 1</strong> predicts Weight (W) using Length (L). Weight is modeled with a normal distribution, where the mean is a linear function of Length, with an intercept (a) and slope (bL). The prior for the intercept (a) is centered around 0, with a standard deviation of 10. This indicates a belief that the baseline weight is approximately 0, with a fairly wide range of uncertainty. The prior for the slope (bL) is centered at 0.5, with a standard deviation of 2, suggesting that for each 1-unit increase in length, the fish’s weight is expected to increase by about 0.5 grams, with some uncertainty regarding the exact effect. The prior for sigma (the weight variability) follows an exponential distribution with a rate of 1, reflecting the natural variability in fish weight. This model captures the relationship between length and weight, accounting for both the expected effect of length and the natural variation in weight.</p>
+<p>Model 1: Simulate the priors</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(m1)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>xseq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(dcc<span class="sc">$</span>L), <span class="fu">max</span>(dcc<span class="sc">$</span>L), <span class="at">length.out =</span> <span class="dv">100</span>)  </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m1, <span class="at">post =</span> prior, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">L =</span> xseq))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">range</span>(xseq), <span class="at">ylim =</span> <span class="fu">range</span>(mu), </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Length"</span>, <span class="at">ylab =</span> <span class="st">"Predicted Weight"</span>, <span class="at">main =</span> <span class="st">"Simulated Priors for Model 1"</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ( i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span> ) <span class="fu">lines</span>( xseq , mu[i,] , <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="st">"black"</span>,<span class="fl">0.3</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Model 2: Height -&gt; Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),       </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bH <span class="sc">*</span> H,            </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),            </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    bH <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)                </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d                     </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m2)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd       5.5%      94.5%
+a     -5.133453e-06 0.05430643 -0.0867973 0.08678703
+bH     7.241861e-01 0.05453824  0.6370235 0.81134875
+sigma  6.857900e-01 0.03833315  0.6245263 0.74705382</code></pre>
+</div>
+</div>
+<p><strong>Model 2</strong> predicts Weight (W) using Height (H). Weight is modeled with a normal distribution, where the mean is a linear function of Height, with an intercept (a) and slope (bH). The prior for the intercept (a) is centered around 0, with a standard deviation of 10, suggesting that the baseline weight is approximately 0, with a relatively wide range of uncertainty. The prior for the slope (bH) is centered around 0.5, with a standard deviation of 2, implying that for each 1-unit increase in height, the fish’s weights is expected to increase by about 0.5 grams, with some uncertainty. The prior for sigma (the weight variability) follows an exponential distribution with a rate of 1, reflecting the natural variability in fish weight. This model captures the relationship between height and weight, accounting for both the expected effect of length and the natural variation in weight.</p>
+<p>Model 2: Simulate the priors</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(m2)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>xseq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(dcc<span class="sc">$</span>H), <span class="fu">max</span>(dcc<span class="sc">$</span>H), <span class="at">length.out =</span> <span class="dv">100</span>)  </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m2, <span class="at">post =</span> prior, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">H =</span> xseq))  </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">range</span>(xseq), <span class="at">ylim =</span> <span class="fu">range</span>(mu), </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Height"</span>, <span class="at">ylab =</span> <span class="st">"Predicted Weight"</span>, <span class="at">main =</span> <span class="st">"Simulated Priors for Model 2"</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(xseq, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))  </span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Model 2: Counterfactual Plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>xseq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="fu">min</span>(dcc<span class="sc">$</span>H) <span class="sc">-</span> <span class="dv">2</span>, <span class="at">to =</span> <span class="fu">max</span>(dcc<span class="sc">$</span>H) <span class="sc">+</span> <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">30</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m2, <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">H =</span> xseq))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>mu_mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(mu, <span class="dv">2</span>, mean)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>mu_PI <span class="ot">&lt;-</span> <span class="fu">apply</span>(mu, <span class="dv">2</span>, PI)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">range</span>(dcc<span class="sc">$</span>H), <span class="at">ylim =</span> <span class="fu">range</span>(dcc<span class="sc">$</span>W), </span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Height (H)"</span>, <span class="at">ylab =</span> <span class="st">"Weight (W)"</span>, <span class="at">main =</span> <span class="st">"Height to Predict Weight"</span>)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xseq, mu_mean, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(mu_PI, xseq)</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="at">x =</span> <span class="fu">mean</span>(<span class="fu">range</span>(dcc<span class="sc">$</span>H)), <span class="at">y =</span> <span class="fu">max</span>(dcc<span class="sc">$</span>W), </span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">labels =</span> <span class="st">"Model: Height -&gt; Weight"</span>, <span class="at">pos =</span> <span class="dv">3</span>, <span class="at">cex =</span> <span class="fl">1.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Model 3: Length 2 + Height -&gt; Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bL <span class="sc">*</span> L <span class="sc">+</span> bH <span class="sc">*</span> H,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),            </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    bH <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dcc</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd        5.5%      94.5%
+a     -1.066862e-07 0.02788313 -0.04456273 0.04456252
+bL     7.707754e-01 0.03642616  0.71255935 0.82899142
+bH     2.307623e-01 0.03642616  0.17254624 0.28897831
+sigma  3.517296e-01 0.01969067  0.32026012 0.38319909</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( <span class="fu">coeftab</span>( m1 , m2 , m3 ) , <span class="at">pars=</span><span class="fu">c</span>(<span class="st">"bL"</span>,<span class="st">"bH"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Model 3 predicts <strong>Weight (W)</strong> using both <strong>Length 2 (L)</strong> and <strong>Height (H)</strong>. The prior for the intercept (<strong>a</strong>) is centered around 20 grams with a standard deviation of 5 grams, reflecting the baseline weight. The slope for <strong>Length 2 (bL)</strong> has a prior centered at 0 with a standard deviation of 1, and the slope for <strong>Height (bH)</strong> has a prior centered at 0.3 with a standard deviation of 0.2, suggesting a positive effect of height on weight.</p>
+<p>M3: We see that 0.77 for the Length is still high but it decreased. The mean for Height also decreased significantly. going from 0.72 to 0.23. So when both x variables are used together their significance decreases.</p>
+<section id="comparison-plot" class="level4">
+<h4 class="anchored" data-anchor-id="comparison-plot">Comparison Plot</h4>
+<p>The circle means the average the lines how wide is the variability.</p>
+<p>The plot shows that height (H) alone in M2 has high variability but a positive relationship with weight, indicating uncertainty in its predictive power. When combined with length (L) in M3, the variability decreases, but height’s ability to predict weight is reduced. Length alone in M1 has low variability, showing it is a strong predictor of weight. However, combining length and height in M3 also reduces length’s predictive strength. Both variables predict weight better individually than together.</p>
+<ul>
+<li><p><strong>Length (L)</strong>:</p>
+<ul>
+<li><p>Alone, it shows a <strong>strong and consistent relationship</strong> with weight, indicated by low variability in its estimate.</p></li>
+<li><p>When combined with height, its predictive ability is slightly diminished, suggesting that height and length may overlap in the variance they explain for weight.</p></li>
+</ul></li>
+<li><p><strong>Height (H)</strong>:</p>
+<ul>
+<li><p>Alone, it has a <strong>positive but more variable relationship</strong> with weight, indicating greater uncertainty.</p></li>
+<li><p>Combining it with length reduces its predictive power, likely due to overlap with length in explaining weight.</p></li>
+</ul></li>
+<li><p><strong>Joint Prediction</strong>:</p>
+<ul>
+<li>Both variables together do not predict weight as effectively as each variable individually. This suggests some redundancy, where both variables might explain similar aspects of weight variation.</li>
+</ul></li>
+</ul>
+<p>Model 3: Simulate the priors</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(m3)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>xseq_L <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(dcc<span class="sc">$</span>L), <span class="fu">max</span>(dcc<span class="sc">$</span>L), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>xseq_H <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(dcc<span class="sc">$</span>H), <span class="fu">max</span>(dcc<span class="sc">$</span>H), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m3, <span class="at">post =</span> prior, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">L =</span> xseq_L, <span class="at">H =</span> xseq_H))</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim =</span> <span class="fu">range</span>(xseq_L), <span class="at">ylim =</span> <span class="fu">range</span>(mu), </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Length"</span>, <span class="at">ylab =</span> <span class="st">"Predicted Weight"</span>, <span class="at">main =</span> <span class="st">"Simulated Priors for Model 3: Length + Height"</span>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) {</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(xseq_L, mu[i,], <span class="at">col =</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="counterfactual-plots-for-all-models" class="level3">
+<h3 class="anchored" data-anchor-id="counterfactual-plots-for-all-models">Counterfactual Plots for all Models</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#counterfactual plots</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>m3.a <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="do">## L -&gt; W &lt;- H</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ) ,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bH<span class="sc">*</span>H <span class="sc">+</span> bL<span class="sc">*</span>L ,</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1</span> ) ,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    bH <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="fl">0.5</span> , <span class="dv">2</span> ) ,</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    bL <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="fl">0.5</span> , <span class="dv">2</span> ) ,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> ),</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="do">## L -&gt; H</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    H <span class="sc">~</span> <span class="fu">dnorm</span>( mu_H , sigma_H ),</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    mu_H <span class="ot">&lt;-</span> aH <span class="sc">+</span> bLH<span class="sc">*</span>L,</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    aH <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="fl">0.2</span> ),</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    bLH <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="fl">0.5</span> ),</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    sigma_H <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> )</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>    ) , <span class="at">data =</span> dcc )</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>L_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="sc">-</span><span class="dv">2</span> , <span class="at">to=</span><span class="dv">2</span> , <span class="at">length.out=</span><span class="dv">30</span> )</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="co">#L ON W</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">L=</span>L_seq )</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>( m3.a , <span class="at">data=</span>sim_dat , <span class="at">vars=</span><span class="fu">c</span>(<span class="st">"H"</span>,<span class="st">"W"</span>) )</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>L, <span class="fu">colMeans</span>(s<span class="sc">$</span>W), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Total counterfactual effect of L on W"</span>,</span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"manipulated L"</span>,</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"counterfactual W"</span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( <span class="fu">apply</span>(s<span class="sc">$</span>W,<span class="dv">2</span>,PI) , sim_dat<span class="sc">$</span>L )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#H ON W</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">H=</span><span class="fu">seq</span>(<span class="at">from=</span><span class="sc">-</span><span class="dv">2</span>,<span class="at">to=</span><span class="dv">2</span>,<span class="at">length.out=</span><span class="dv">30</span>) , <span class="at">L=</span><span class="dv">0</span> )</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>( m3.a , <span class="at">data=</span>sim_dat , <span class="at">vars=</span><span class="fu">c</span>(<span class="st">"W"</span>) )</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( sim_dat<span class="sc">$</span>H , <span class="fu">colMeans</span>(s) , <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>) , <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main =</span> <span class="st">"Total Counterfactual Effect of H on W"</span>, <span class="at">xlab =</span><span class="st">"manipulated H"</span> , <span class="at">ylab =</span><span class="st">"counterfactual W"</span> )</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>( <span class="fu">apply</span>(s,<span class="dv">2</span>,PI) , sim_dat<span class="sc">$</span>H )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#H ON L</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">H =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">to =</span> <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">30</span>))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(m3.a, <span class="at">data =</span> sim_dat, <span class="at">vars =</span> <span class="st">"L"</span>)  <span class="co"># Simulate L based on H</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">5.1</span>, <span class="fl">4.1</span>, <span class="fl">4.1</span>, <span class="fl">2.1</span>))</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_dat<span class="sc">$</span>H, <span class="fu">colMeans</span>(s), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Counterfactual Effect of L on H"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Manipulated H"</span>,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Counterfactual L"</span>)</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(<span class="fu">apply</span>(s, <span class="dv">2</span>, PI), sim_dat<span class="sc">$</span>H)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-15-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>Length does good job at explaining weight -2 to 2</li>
+<li>Height is OK/decent -1 to 0 has a decent relation ship</li>
+<li>Not a really significant relation, because its at 1 the relationship exist but it doesnt mean anythign</li>
+</ol>
+</section>
+</section>
+<section id="markov-chain-monte-carlo" class="level2">
+<h2 class="anchored" data-anchor-id="markov-chain-monte-carlo">Markov Chain Monte Carlo</h2>
+<p>MCMC - Model 1: Length2 -&gt; Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC - Model 1: Length2 -&gt; Weight</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>m1_mcmc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),        </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bL <span class="sc">*</span> L,             </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),              </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),           </span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)               </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dcc,              </span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,                    </span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,                     </span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_lik =</span> <span class="cn">TRUE</span>                 </span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Removing one or more character or factor variables:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Species</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.1 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m1_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd        5.5%      94.5%     rhat ess_bulk
+a     -0.0002391809 0.03239622 -0.05260939 0.05015526 1.001384 2021.163
+bL     0.9176218820 0.03193506  0.86700614 0.96993348 1.002102 1686.831
+sigma  0.3990582270 0.02367038  0.36317978 0.43783203 1.000609 1917.424</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m1_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 2 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 3 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 4 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 5 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 6 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 7 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 8 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 9 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 10 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 11 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">WAIC</span>(m1_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      WAIC      lppd  penalty  std_err
+1 162.2902 -77.15351 3.991606 20.43395</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-16-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>MCMC - Model 2: Height -&gt; Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC - Model 2: Height -&gt; Weight</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>m2_mcmc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),        </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bH <span class="sc">*</span> H,             </span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),              </span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>    bH <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),           </span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)               </span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> dcc,              </span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">chains =</span> <span class="dv">4</span>,                    </span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,                     </span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_lik =</span> <span class="cn">TRUE</span>                 </span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Removing one or more character or factor variables:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Species</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in '/var/folders/ym/vpwglz617b78sp1lhzq6ydx00000gn/T/RtmpJMlyzU/model-3e9d24418835.stan', line 25, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.1 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m2_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              mean         sd        5.5%     94.5%      rhat ess_bulk
+a     0.0004709704 0.05272183 -0.08275567 0.0855989 0.9996331 1947.515
+bH    0.7233994790 0.05601124  0.63704289 0.8108922 0.9997452 2202.755
+sigma 0.6943400920 0.03967230  0.63460187 0.7592110 1.0026747 1883.757</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m2_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 2 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 3 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 4 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 5 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 6 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 7 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 8 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 9 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 10 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 11 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">WAIC</span>(m2_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      WAIC      lppd  penalty  std_err
+1 341.2441 -164.8002 5.821849 40.44943</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-17-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>MCMC - Model 3: Length2 + Height -&gt; Weight</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MCMC - Model 3: Length 2 + Height -&gt; Weight</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>m3_mcmc <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>    W<span class="sc">~</span> <span class="fu">dnorm</span>( mu, sigma),</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bL <span class="sc">*</span> L <span class="sc">+</span> bH <span class="sc">*</span> H,</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>      a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>),              </span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>      bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),   </span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>      bH <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">2</span>),</span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span>)</span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a>), <span class="at">data =</span> dcc,</span>
+<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">chains=</span><span class="dv">4</span>,</span>
+<span id="cb89-12"><a href="#cb89-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">cores=</span><span class="dv">4</span>,</span>
+<span id="cb89-13"><a href="#cb89-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">log_lik =</span> <span class="cn">TRUE</span></span>
+<span id="cb89-14"><a href="#cb89-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Removing one or more character or factor variables:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Species</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 4 parallel chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in '/var/folders/ym/vpwglz617b78sp1lhzq6ydx00000gn/T/RtmpJMlyzU/model-3e9d6e3b742e.stan', line 27, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 4 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 4 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 4 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 4 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 4 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 4 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 4 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 4 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 4 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 4 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 4 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 4 Iteration: 1000 / 1000 [100%]  (Sampling) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in '/var/folders/ym/vpwglz617b78sp1lhzq6ydx00000gn/T/RtmpJMlyzU/model-3e9d6e3b742e.stan', line 27, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 4 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 0.1 seconds.
+Chain 2 finished in 0.1 seconds.
+Chain 3 finished in 0.1 seconds.
+Chain 4 finished in 0.1 seconds.
+
+All 4 chains finished successfully.
+Mean chain execution time: 0.1 seconds.
+Total execution time: 0.2 seconds.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m3_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              mean         sd        5.5%      94.5%     rhat ess_bulk
+a     0.0006657714 0.02821998 -0.04261186 0.04411038 1.000594 2119.008
+bL    0.7698415090 0.03654280  0.70979565 0.82783548 1.002754 1188.206
+bH    0.2317047609 0.03697904  0.17493946 0.29127449 1.001699 1194.819
+sigma 0.3577940340 0.02198468  0.32540090 0.39522983 1.000592 1918.663</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m3_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 2 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 3 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 4 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 5 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 6 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 7 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 8 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 9 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 10 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Waiting to draw page 11 of 11</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">WAIC</span>(m3_mcmc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      WAIC      lppd  penalty std_err
+1 130.2759 -58.77563 6.362314 20.1096</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="FinalProject_files/figure-html/unnamed-chunk-18-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="comparing-the-models-using-waic" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-the-models-using-waic">Comparing the Models using WAIC</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>( m1_mcmc , m2_mcmc , m3_mcmc )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            WAIC       SE     dWAIC      dSE    pWAIC       weight
+m3_mcmc 130.2759 20.10960   0.00000       NA 6.362314 9.999999e-01
+m1_mcmc 162.2902 20.43395  32.01436 15.39275 3.991606 1.117300e-07
+m2_mcmc 341.2441 40.44943 210.96826 31.54540 5.821849 1.544631e-46</code></pre>
+</div>
+</div>
+<p>The <strong>WAIC (Widely Applicable Information Criterion)</strong> values indicate the relative performance of the three models, with lower values representing better predictive accuracy and model fit.</p>
+</section>
+<section id="explanation" class="level3">
+<h3 class="anchored" data-anchor-id="explanation">Explanation:</h3>
+<ul>
+<li><p><strong>M1 (WAIC = 162.0)</strong>:<br>
+Using length alone provides a relatively good fit, with a lower WAIC than M2. Length is a strong predictor of weight.</p></li>
+<li><p><strong>M2 (WAIC = 341.3)</strong>:<br>
+Using height alone results in the worst fit. The high WAIC indicates that height is less effective at predicting weight compared to length or the combined model.</p></li>
+<li><p><strong>M3 (WAIC = 130.4)</strong>:<br>
+Combining length and height provides the best fit. The lowest WAIC suggests that including both predictors captures more variability in weight and improves predictive performance compared to using either variable alone.</p></li>
+</ul>
+<p>Length is a stronger individual predictor of weight than height (as seen in M1 vs.&nbsp;M2), but combining both predictors in M3 gives the best overall model fit.</p>
+</section>
+</section>
+<section id="resources-used-works-cited" class="level2">
+<h2 class="anchored" data-anchor-id="resources-used-works-cited">Resources Used/ Works Cited</h2>
+<ol type="1">
+<li>Fish Market Data (<a href="https://www.kaggle.com/datasets/vipullrathod/fish-market/data" class="uri">https://www.kaggle.com/datasets/vipullrathod/fish-market/data</a>)</li>
+<li>DAG Models (<a href="https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-dags.html" class="uri">https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-dags.html</a>)</li>
+</ol>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
