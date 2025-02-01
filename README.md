@@ -2,7 +2,8 @@
 
 **Authors**: Jayden Cruz & Christopher Garcia  
 **Course**: Bayesian Statistics  
-**Project Type**: Final Project  
+**Grade**: 95 (A) - Passed the course with an A  
+**Project Type**: Final Project   
 
 ## Overview
 
